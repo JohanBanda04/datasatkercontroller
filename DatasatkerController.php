@@ -1125,13 +1125,15 @@ class DatasatkerController extends Controller
                     }
                 }
 
+                $secondtStyle = 'secondStyle';
+                $phpword->addFontStyle($secondtStyle, array('name' => 'Arial', 'size' => 12, 'bold' => false));
                 $no_berita_eksternal_3 = $no_berita_eksternal_2;
                 foreach ($dtBerita as $index => $news) {
                     $getSatkerRole = DB::table('satker')->where('kode_satker', $news->kode_satker)->first()->roles;
-                    if ($getSatkerRole == 'humas_satker') {
-                        foreach (json_decode($news->media_lokal) as $num => $medlok) {
+                    if ($getSatkerRole == 'humas_kanwil') {
+                        foreach (json_decode($news->media_nasional) as $num => $mednas) {
                             $no_berita_eksternal_3 += 1;
-                            $explode = explode('|||', $medlok);
+                            $explode = explode('|||', $mednas);
                             $text = $section->addText($no_berita_eksternal_3 . ". " . $explode[0], $firstStyle);
                             $text = $section->addText($explode[1], $secondtStyle);
                             $text = $section->addText('');
@@ -1144,9 +1146,9 @@ class DatasatkerController extends Controller
                 foreach ($dtBerita as $index => $news) {
                     $getSatkerRole = DB::table('satker')->where('kode_satker', $news->kode_satker)->first()->roles;
                     if ($getSatkerRole == 'humas_satker') {
-                        foreach (json_decode($news->media_nasional) as $num => $mednas) {
+                        foreach (json_decode($news->media_lokal) as $num => $medlok) {
                             $no_berita_eksternal_4 += 1;
-                            $explode = explode('|||', $mednas);
+                            $explode = explode('|||', $medlok);
                             $text = $section->addText($no_berita_eksternal_4 . ". " . $explode[0], $firstStyle);
                             $text = $section->addText($explode[1], $secondtStyle);
                             $text = $section->addText('');
@@ -1155,12 +1157,10 @@ class DatasatkerController extends Controller
                     }
                 }
 
-                $secondtStyle = 'secondStyle';
-                $phpword->addFontStyle($secondtStyle, array('name' => 'Arial', 'size' => 12, 'bold' => false));
                 $no_berita_eksternal_5 = $no_berita_eksternal_4;
                 foreach ($dtBerita as $index => $news) {
                     $getSatkerRole = DB::table('satker')->where('kode_satker', $news->kode_satker)->first()->roles;
-                    if ($getSatkerRole == 'humas_kanwil') {
+                    if ($getSatkerRole == 'humas_satker') {
                         foreach (json_decode($news->media_nasional) as $num => $mednas) {
                             $no_berita_eksternal_5 += 1;
                             $explode = explode('|||', $mednas);
