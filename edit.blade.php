@@ -39,7 +39,7 @@
                 <input type="text" value="{{ $berita->nama_berita }}" class="form-control"
                        name="judul_berita_satker"
                        id="judul_berita_satker"
-                       placeholder="Judul Berita Edit" >
+                       placeholder="Judul Berita Edit">
             </div>
         </div>
     </div>
@@ -296,6 +296,11 @@
 
 
 </form>
+@push('myscript')
+    <script>
+        /*mungkin harus di dalam push('myscript') ini utk validasi dgn nama kelas "jumlah_medlok"*/
+    </script>
+@endpush
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -550,7 +555,7 @@
                     $('#website').focus();
                 });
                 return false;
-            }else if (instagram == '') {
+            } else if (instagram == '') {
                 Swal.fire({
                     title: 'Warning!',
                     text: 'Link Instagram Harus Diisi',
@@ -560,7 +565,7 @@
                     $('#instagram').focus();
                 });
                 return false;
-            }else if (twitter == '') {
+            } else if (twitter == '') {
                 Swal.fire({
                     title: 'Warning!',
                     text: 'Link Twitter Harus Diisi',
@@ -570,7 +575,7 @@
                     $('#twitter').focus();
                 });
                 return false;
-            }else if (tiktok == '') {
+            } else if (tiktok == '') {
                 Swal.fire({
                     title: 'Warning!',
                     text: 'Link Tiktok Harus Diisi',
@@ -580,7 +585,7 @@
                     $('#tiktok').focus();
                 });
                 return false;
-            }else if (sippn == '') {
+            } else if (sippn == '') {
                 Swal.fire({
                     title: 'Warning!',
                     text: 'Link SIPPN Harus Diisi',
@@ -590,7 +595,7 @@
                     $('#sippn').focus();
                 });
                 return false;
-            }else if (youtube == '') {
+            } else if (youtube == '') {
                 Swal.fire({
                     title: 'Warning!',
                     text: 'Link Youtube Harus Diisi',
