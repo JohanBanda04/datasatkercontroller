@@ -1304,6 +1304,7 @@ class DatasatkerController extends Controller
             $text = $section->addText($news->website, $secondtStyle);
 //            ..
             $text = $section->addText('');
+
             foreach (json_decode($news->media_lokal) ?? [] as $num => $medlok) {
                 $number = ($numb + $num) + 1;
 //                $number = $number + 1;
@@ -1368,7 +1369,9 @@ class DatasatkerController extends Controller
     {
         $id_berita = $request->id_berita;
         $berita = DB::table('berita')->where('id_berita', $id_berita)->first();
-        return view('beritasatker.edit', compact('berita'));
+        //return $berita->kode_satker;
+        $kode_satker = $berita->kode_satker;;
+        return view('beritasatker.edit', compact('berita','kode_satker'));
     }
 
     public function hapuslink(Request $request)
@@ -1457,8 +1460,10 @@ class DatasatkerController extends Controller
 
     public function updateberita($id_berita, Request $request)
     {
+        //return $id_berita;
         $id = $id_berita;
 
+        $kode_satker = DB::table('berita')->where('id_berita', $id_berita)->first()->kode_satker;
         /*media lokal*/
         if ($request->jumlah_edit != null) {
             $media_lokal = count($request->jumlah_edit);
@@ -1580,14 +1585,14 @@ class DatasatkerController extends Controller
             ];
             $update = DB::table('berita')->where('id_berita', $id_berita)->update($data_to_update);
             if ($update) {
-                return Redirect::back()->with(['success' => 'Data Berhasil Diupdate']);
+                return redirect()->route('getberita',$kode_satker)->with(['success'=>'Data Berhasil Diupdate']);
             } else {
-                return Redirect::back()->with(['warning' => 'Data Diupdate']);
+                return redirect()->route('getberita',$kode_satker)->with(['warning'=>'Data Gagal Diupdate']);
             }
 
 
         } catch (\Exception $e) {
-            return Redirect::back()->with(['warning' => 'Data Gagal Diupdate']);
+            return redirect()->route('getberita',$kode_satker)->with(['warning'=>'Data Gagal Diupdate']);
         }
 
 
