@@ -63,7 +63,7 @@ class DatasatkerController extends Controller
         //dd(($cek_satker)->count());
         //dd($nama ."-".$email."-".$no_hp."-".$roles."-".$password);
         if (($cek_satker)->count() > 0) {
-            return redirect()->route('datasatker')->with(['warning'=>'Nama Satker Sudah Ada / Email Telah Terdaftar']);
+            return redirect()->route('datasatker')->with(['warning' => 'Nama Satker Sudah Ada / Email Telah Terdaftar']);
         } else {
             try {
                 $data = [
@@ -83,12 +83,12 @@ class DatasatkerController extends Controller
                         $folderPath = "public/uploads/satker";
                         $request->file('foto')->storeAs($folderPath, $foto);
                     }
-                    return redirect()->route('datasatker')->with(['success'=>'Data Berhasil Disimpan']);
+                    return redirect()->route('datasatker')->with(['success' => 'Data Berhasil Disimpan']);
                 } else {
-                    return redirect()->route('datasatker')->with(['warning'=>'Data Gagal Disimpan']);
+                    return redirect()->route('datasatker')->with(['warning' => 'Data Gagal Disimpan']);
                 }
             } catch (\Exception $e) {
-                return redirect()->route('datasatker')->with(['warning'=>'Data Gagal Disimpan ']);
+                return redirect()->route('datasatker')->with(['warning' => 'Data Gagal Disimpan ']);
             }
         }
 
@@ -280,8 +280,11 @@ class DatasatkerController extends Controller
         if ($count != 0) {
 
             for ($i = 0; $i < $count; $i++) {
+                //echo  "ini data medlok index ke".$i."<br>";
+
                 $url_gabung[$i] = $request->jumlah[$i];
             }
+            //die;
         } else {
             $url_gabung = [];
         }
@@ -305,6 +308,24 @@ class DatasatkerController extends Controller
         //echo json_encode($url_gabung_nasional)."<br>";
         //echo print_r(json_decode(json_encode($url_gabung_nasional))) ;
         //die;
+
+        if (json_encode($url_gabung) == "") {
+            //echo "tidak ada json encode";
+            $url_gabung_tosave = "-|||-";
+        } else if (json_encode($url_gabung) != "") {
+            //echo "ada json encode";
+            $url_gabung_tosave = json_encode($url_gabung);
+        }
+
+        if (json_encode($url_gabung_nasional) == "") {
+            //echo "tidak ada json encode";
+            $url_gabung_nasional_tosave = "-|||-";
+        } else if (json_encode($url_gabung_nasional) != "") {
+            //echo "ada json encode";
+            $url_gabung_nasional_tosave = json_encode($url_gabung_nasional);
+        }
+
+        //die;
         try {
             $data = [
                 "kode_satker" => $request->kode_satker,
@@ -317,8 +338,8 @@ class DatasatkerController extends Controller
                 "tiktok" => $request->tiktok,
                 "sippn" => $request->sippn,
                 "youtube" => $request->youtube,
-                "media_lokal" => json_encode($url_gabung),
-                "media_nasional" => json_encode($url_gabung_nasional),
+                "media_lokal" => $url_gabung_tosave,
+                "media_nasional" => $url_gabung_nasional_tosave,
             ];
             $simpan = DB::table('berita')->insert($data);
             if ($simpan) {
@@ -358,20 +379,20 @@ class DatasatkerController extends Controller
                     ];
                     $update = DB::table('satker')->where('kode_satker', $kd_satker)->update($data_to_update);
                     if ($update) {
-                        return redirect()->route('gantipassword',$kode_satker)->with(['success' => 'Data Berhasil Diupdate']);
+                        return redirect()->route('gantipassword', $kode_satker)->with(['success' => 'Data Berhasil Diupdate']);
                     } else {
-                        return redirect()->route('gantipassword',$kode_satker)->with(['warning' => 'Data Gagal Diupdate']);
+                        return redirect()->route('gantipassword', $kode_satker)->with(['warning' => 'Data Gagal Diupdate']);
                     }
                 } catch (\Exception $e) {
-                    return redirect()->route('gantipassword',$kode_satker)->with(['warning' => 'Data Gagal Diupdate']);
+                    return redirect()->route('gantipassword', $kode_satker)->with(['warning' => 'Data Gagal Diupdate']);
                 }
             } else if ($password_new != $password_new_confirm) {
-                return redirect()->route('gantipassword',$kode_satker)->with(['warning' => 'Password Baru dan Konfirmasi Password Baru Salah']);
+                return redirect()->route('gantipassword', $kode_satker)->with(['warning' => 'Password Baru dan Konfirmasi Password Baru Salah']);
 
             }
         } else {
             //dd("password doesnt match");
-            return redirect()->route('gantipassword',$kode_satker)->with(['warning' => 'Password Lama Salah']);
+            return redirect()->route('gantipassword', $kode_satker)->with(['warning' => 'Password Lama Salah']);
         }
 
 
@@ -1371,7 +1392,7 @@ class DatasatkerController extends Controller
         $berita = DB::table('berita')->where('id_berita', $id_berita)->first();
         //return $berita->kode_satker;
         $kode_satker = $berita->kode_satker;;
-        return view('beritasatker.edit', compact('berita','kode_satker'));
+        return view('beritasatker.edit', compact('berita', 'kode_satker'));
     }
 
     public function hapuslink(Request $request)
@@ -1460,6 +1481,8 @@ class DatasatkerController extends Controller
 
     public function updateberita($id_berita, Request $request)
     {
+        //echo "tes putri";
+        //die;
         //return $id_berita;
         $id = $id_berita;
 
@@ -1537,6 +1560,11 @@ class DatasatkerController extends Controller
             //$url_media_lokal_tosave =  json_encode(array_merge($url_media_lokal_lama,$url_gabung));
             $url_media_lokal_tosave = json_encode($url_gabung);
 
+            if ($url_media_lokal_tosave == "") {
+                $url_media_lokal_tosave = "-|||-";
+            } else if ($url_media_lokal_tosave != "") {
+                $url_media_lokal_tosave = json_encode($url_gabung);
+            }
             //dd($url_media_lokal_tosave);
             //die;
         } else if ($count <= 0) {
@@ -1554,6 +1582,12 @@ class DatasatkerController extends Controller
             //$url_media_nasional_lama = json_decode($medianasional_old=='null'?"[]":$medianasional_old);
             //$url_media_nasional_tosave =  json_encode(array_merge($url_media_nasional_lama,$url_gabung_nasional));
             $url_media_nasional_tosave = json_encode($url_gabung_nasional);
+
+            if ($url_media_nasional_tosave == "") {
+                $url_media_nasional_tosave = "-|||-";
+            } else if ($url_media_nasional_tosave != "") {
+                $url_media_nasional_tosave = json_encode($url_gabung_nasional);
+            }
             //dd($url_media_nasional_tosave);
             //die;
         } else if ($count_nasional <= 0) {
@@ -1585,14 +1619,14 @@ class DatasatkerController extends Controller
             ];
             $update = DB::table('berita')->where('id_berita', $id_berita)->update($data_to_update);
             if ($update) {
-                return redirect()->route('getberita',$kode_satker)->with(['success'=>'Data Berhasil Diupdate']);
+                return redirect()->route('getberita', $kode_satker)->with(['success' => 'Data Berhasil Diupdate']);
             } else {
-                return redirect()->route('getberita',$kode_satker)->with(['warning'=>'Data Gagal Diupdate']);
+                return redirect()->route('getberita', $kode_satker)->with(['warning' => 'Data Gagal Diupdate']);
             }
 
 
         } catch (\Exception $e) {
-            return redirect()->route('getberita',$kode_satker)->with(['warning'=>'Data Gagal Diupdate']);
+            return redirect()->route('getberita', $kode_satker)->with(['warning' => 'Data Gagal Diupdate']);
         }
 
 
