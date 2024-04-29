@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\Settings;
 
 class DatasatkerController extends Controller
 {
@@ -189,6 +190,7 @@ class DatasatkerController extends Controller
 
     public function getberita($kode_satker, Request $request)
     {
+        //return "humas satker cosplay";
         /*penggunaan define gate*/
         //$this->authorize('admin');
         $dtSatkerCek = DB::table('satker')->get();
@@ -410,10 +412,9 @@ class DatasatkerController extends Controller
 
     public function pilih_konfigurasi_berita(Request $request)
     {
-        //return $request;
-        //return "ini respond bro : ".$request->id_berita;
-        //return "ini respond bro : ".$request->kode_satker;
-
+        //return "tes huda";
+        //return "tes ilyas";
+        //return $request->id_berita." brooo";
         $id_berita = $request->id_berita;
         $kode_satker = $request->kode_satker;
 
@@ -700,6 +701,7 @@ class DatasatkerController extends Controller
         }
 
 
+        Settings::setOutputEscapingEnabled(true);
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpword, 'Word2007');
         $objWriter->save('LaporanWhatssap' . $time . '.docx');
         return response()->download(public_path('LaporanWhatssap' . $time . ".docx"));
@@ -905,6 +907,7 @@ class DatasatkerController extends Controller
                 $text = $section->addText($dtKonfig->nama_kakanwil, $secondtStyle);
                 $text = $section->addText('');
 
+                Settings::setOutputEscapingEnabled(true);
                 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpword, 'Word2007');
                 $objWriter->save('LaporanWhatssapRekap' . $namaSatker . $time . '.docx');
                 return response()->download(public_path('LaporanWhatssapRekap' . $namaSatker . $time . '.docx'));
@@ -1201,6 +1204,7 @@ class DatasatkerController extends Controller
                 $text = $section->addText($dtKonfig->nama_kakanwil, $secondtStyle);
                 $text = $section->addText('');
 
+                Settings::setOutputEscapingEnabled(true);
                 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpword, 'Word2007');
                 $objWriter->save('LaporanWhatssapRekapSemuaSatker' . $time . '.docx');
                 return response()->download(public_path('LaporanWhatssapRekapSemuaSatker' . $time . ".docx"));
@@ -1214,15 +1218,21 @@ class DatasatkerController extends Controller
 
     }
 
+    /*utk humas_kanwil dan humas_satker sama saja*/
     public function whatssapgenerate_message_news(Request $request)
     {
+        //return "tes bang yas";
         $id_konfig = $request->id_konfig;
+        //return $id_konfig;
         $id_berita = $request->id_berita;
         $kode_satker = $request->kode_satker;
-        //return $request;
 
         //$time = date('Y-m-d');
         $dtKonfig = DB::table('konfigurasi_berita')->where('id_konfig', $id_konfig)->first();
+        //echo "<pre>"; print_r($dtKonfig);
+        //die;
+        //dd($dtKonfig->id_konfig);
+
         $getBerita = DB::table('berita')
             ->where('kode_satker', $kode_satker)
             ->where('id_berita', $id_berita)
@@ -1296,15 +1306,28 @@ class DatasatkerController extends Controller
         $text = $section->addText('');
 
         foreach ($getBerita ?? [] as $index => $news) {
+            $firstStyle = 'firstStyle';
+            $secondtStyle = 'secondStyle';
+            $phpword->addFontStyle(
+                $firstStyle, array('name' => 'Arial', 'size' => 12, 'bold' => true)
+            );
+
+            $phpword->addFontStyle(
+                $secondtStyle, array('name' => 'Arial', 'size' => 12, 'bold' => false)
+            );
+
             $no = $index + 1;
             $text = $section->addText($no . '. ' . $news->nama_berita, $firstStyle);
 
             $text = $section->addText('');
             $text = $section->addText('Berita Selengkapnya bisa dilihat pada halaman berikut : ', $secondtStyle);
 
+            //echo $news->facebook;
             $text = $section->addText('');
             $text = $section->addText('Facebook: ', $firstStyle);
             $text = $section->addText($news->facebook, $secondtStyle);
+            //echo $news->facebook;
+            //preketekz
 
             $text = $section->addText('');
             $text = $section->addText('Instagram: ', $firstStyle);
@@ -1323,7 +1346,7 @@ class DatasatkerController extends Controller
             $numb = 1;
             $text = $section->addText($numb . '. ' . $news->nama_berita, $firstStyle);
             $text = $section->addText($news->website, $secondtStyle);
-//            ..
+
             $text = $section->addText('');
 
             foreach (json_decode($news->media_lokal) ?? [] as $num => $medlok) {
@@ -1348,8 +1371,9 @@ class DatasatkerController extends Controller
                 //$text = $section->addText($number_nas . "." . $mednas, $secondtStyle);
             }
             $text = $section->addText('');
-        }
 
+
+        }
         foreach (json_decode($dtKonfig->jumlah_hashtag) ?? [] as $idx => $hashtag) {
             $text = $section->addText($hashtag, $secondtStyle);
         }
@@ -1363,7 +1387,8 @@ class DatasatkerController extends Controller
         $text = $section->addText($dtKonfig->penutup, $secondtStyle);
         $text = $section->addText($dtKonfig->salam_penutup, $firstStyle);
 
-
+        //die;
+        Settings::setOutputEscapingEnabled(true);
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpword, 'Word2007');
         $objWriter->save('LaporanWhatssap' . $time . '.docx');
         return response()->download(public_path('LaporanWhatssap' . $time . ".docx"));
@@ -1388,6 +1413,7 @@ class DatasatkerController extends Controller
 
     public function editberita(Request $request)
     {
+        //return $request->id_berita;
         $id_berita = $request->id_berita;
         $berita = DB::table('berita')->where('id_berita', $id_berita)->first();
         //return $berita->kode_satker;
