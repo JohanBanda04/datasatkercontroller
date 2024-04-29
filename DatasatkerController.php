@@ -1449,7 +1449,7 @@ class DatasatkerController extends Controller
                 "tiktok" => $databerita->tiktok,
                 "sippn" => $databerita->sippn,
                 "youtube" => $databerita->youtube,
-                "media_lokal" => json_encode(count($links_media_lokal) > 0 ? array_values($links_media_lokal) : null),
+                "media_lokal" => json_encode(count($links_media_lokal) > 0 ? array_values($links_media_lokal) : []),
                 "tgl_update" => date('Y-m-d')
 //            "media_nasional"=>$databerita->media_nasional,
             ];
@@ -1491,7 +1491,7 @@ class DatasatkerController extends Controller
                 "sippn" => $databerita_nasional->sippn,
                 "youtube" => $databerita_nasional->youtube,
                 //"media_lokal"=>json_encode(count($links_media_lokal)>0?array_values($links_media_lokal):null),
-                "media_nasional" => json_encode(count($links_media_nasional) > 0 ? array_values($links_media_nasional) : null),
+                "media_nasional" => json_encode(count($links_media_nasional) > 0 ? array_values($links_media_nasional) : []),
             ];
             $update = DB::table('berita')->where('id_berita', $id_berita)->update($data_to_update);
             if ($update) {
@@ -1578,6 +1578,8 @@ class DatasatkerController extends Controller
         //die;
 
         /*media lokal*/
+
+        //return $count;
         if ($count > 0) {
             for ($i = 0; $i < $count; $i++) {
                 $url_gabung[$i] = $request->jumlah_edit[$i];
@@ -1597,6 +1599,11 @@ class DatasatkerController extends Controller
             //$url_media_lokal_tosave = [];
             $url_media_lokal_tosave = $medialokal_old;
         }
+
+        //return $medialokal_old;
+
+        //return $count;
+        //return $url_media_lokal_tosave;
 
         /*media nasional*/
         if ($count_nasional > 0) {
@@ -1621,6 +1628,7 @@ class DatasatkerController extends Controller
             $url_media_nasional_tosave = $medianasional_old;
         }
 
+        //return "mednas : ".$medianasional_old;
         //echo "<pre>";  print_r($url_media_nasional_tosave);
         //die;
         //dd($medialokal_old);
@@ -1647,11 +1655,12 @@ class DatasatkerController extends Controller
             if ($update) {
                 return redirect()->route('getberita', $kode_satker)->with(['success' => 'Data Berhasil Diupdate']);
             } else {
-                return redirect()->route('getberita', $kode_satker)->with(['warning' => 'Data Gagal Diupdate']);
+                return redirect()->route('getberita', $kode_satker);
             }
 
 
         } catch (\Exception $e) {
+            /*pretuy*/
             return redirect()->route('getberita', $kode_satker)->with(['warning' => 'Data Gagal Diupdate']);
         }
 
