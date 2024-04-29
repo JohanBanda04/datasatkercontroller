@@ -2483,12 +2483,14 @@ where kode_satker='$kode_satker' and youtube!='' AND tgl_input between '$dari' a
             ];
             $update = DB::table('konfigurasi_berita')->where('id_konfig', $id_konfig)->update($data_konfig_update);
             if ($update) {
-                return Redirect::back()->with(['success' => 'Data Konfigurasi Berhasil Diupdate']);
+                return redirect()->route('konfig.konfiglaporanberita')->with(['success' => 'Data Konfigurasi Berhasil Diupdate']);
             } else {
-                return Redirect::back()->with(['warning' => 'Data Konfigurasi Gagal Diupdate']);
+                return redirect()->route('konfig.konfiglaporanberita')->with(['warning' => 'Data Konfigurasi Gagal Diupdate']);
+
             }
         } catch (\Exception $e) {
-            return Redirect::back()->with(['warning' => 'Data Konfigurasi Gagal Diupdate']);
+            return redirect()->route('konfig.konfiglaporanberita')->with(['warning' => 'Data Konfigurasi Gagal Diupdate']);
+
         }
     }
 
