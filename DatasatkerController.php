@@ -2578,9 +2578,9 @@ where kode_satker='$kode_satker' and youtube!='' AND tgl_input between '$dari' a
     {
         $delete = DB::table('konfigurasi_berita')->where('id_konfig', $id_konfig)->delete();
         if ($delete) {
-            return Redirect::back()->with(['success' => 'Konfigurasi Berita Berhasil Dihapus']);
+            return redirect()->route('konfig.konfiglaporanberita')->with(['success' => 'Konfigurasi Berita Berhasil Dihapus']);
         } else {
-            return Redirect::back()->with(['warning' => 'Konfigurasi Berita Gagal Dihapus']);
+            return redirect()->route('konfig.konfiglaporanberita')->with(['warning' => 'Konfigurasi Berita Gagal Dihapus']);
         }
         //dd($delete[0]->name_config);
     }
