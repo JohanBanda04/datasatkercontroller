@@ -1896,7 +1896,7 @@ where kode_satker='$kode_satker' and youtube!='' AND tgl_input between '$dari' a
 
     public function konfiglaporanberita(Request $request)
     {
-
+        //return "config berita link";
         $query = Konfigurasiberita::query();
         $query->select('*');
         $query->join('satker', 'konfigurasi_berita.kode_satker', '=', 'satker.kode_satker');
@@ -1981,7 +1981,7 @@ where kode_satker='$kode_satker' and youtube!='' AND tgl_input between '$dari' a
 
     public function storekonfig(Request $request)
     {
-        //dd($request);
+        //dd($request->_token);
 
         $kode_satker_konfig = $request->kode_satker_konfig;
         $nama_konfigurasi = $request->nama_konfig;
@@ -2091,14 +2091,15 @@ where kode_satker='$kode_satker' and youtube!='' AND tgl_input between '$dari' a
             $simpan = DB::table('konfigurasi_berita')->insert($data);
             if ($simpan) {
 
-                //return redirect()->route('getberita',$request->kode_satker)->with(['success'=>'Data Berhasil Disimpan']);
-                return Redirect::back()->with(['success' => 'Data Berhasil Disimpan']);
+                return redirect()->route('konfig.konfiglaporanberita')->with(['success' => 'Data Berhasil Disimpan']);
             } else {
+                return redirect()->route('konfig.konfiglaporanberita')->with(['warning' => 'Data Gagal Disimpan']);
 
-                return Redirect::back()->with(['warning' => 'Data Gagal Disimpan']);
             }
         } catch (\Exception $e) {
-            return Redirect::back()->with(['warning' => 'Data Gagal Disimpan']);
+            //return Redirect::back()->with(['warning' => 'Data Gagal Disimpan']);
+            return redirect()->route('konfig.konfiglaporanberita')->with(['warning' => 'Data Gagal Disimpan']);
+
         }
     }
 
