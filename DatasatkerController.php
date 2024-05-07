@@ -1474,7 +1474,9 @@ class DatasatkerController extends Controller
         $databerita_nasional = DB::table('berita')->where('id_berita', $id_berita)->first();
 
         $links_media_nasional = json_decode($databerita_nasional->media_nasional);
-        //return count($links_media_lokal);
+        //echo print_r($links_media_nasional); die;
+        //return "linksnya: ".$links_media_nasional;
+        //return $links_media_nasional;
         if (($key = array_search($link, $links_media_nasional)) !== false) {
             unset($links_media_nasional[$key]);
         }
@@ -1669,6 +1671,7 @@ class DatasatkerController extends Controller
 
     public function laporanberita()
     {
+        //echo "laporan berita"; die;
         $namabulan = [
             "",
             "Januari",
@@ -1714,7 +1717,6 @@ class DatasatkerController extends Controller
 
     public function cetaklaporanberita(Request $request)
     {
-
         //return "woy";
         $namabulan = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September",
             "Oktober", "November", "Desember",
@@ -1763,29 +1765,23 @@ class DatasatkerController extends Controller
 
         /*disnet*/
         $total_website = DB::select(DB::raw("SELECT count(website) as jml_website from berita 
-where kode_satker='$kode_satker' and website!='' AND tgl_input between '$dari' and '$sampai'"));
+where kode_satker='$kode_satker' and length(website)>10 AND tgl_input between '$dari' and '$sampai'"));
         $total_facebook = DB::select(DB::raw("SELECT count(facebook) as jml_facebook from berita 
-where kode_satker='$kode_satker' and facebook!='' AND tgl_input between '$dari' and '$sampai'"));
+where kode_satker='$kode_satker' and length(facebook)>10 AND tgl_input between '$dari' and '$sampai'"));
         //dd($total_facebook[0]->jml_facebook);
         $total_instagram = DB::select(DB::raw("SELECT count(instagram) as jml_instagram from berita 
-where kode_satker='$kode_satker' and instagram!='' AND tgl_input between '$dari' and '$sampai'"));
+where kode_satker='$kode_satker' and length(instagram)>10 AND tgl_input between '$dari' and '$sampai'"));
         $total_twitter = DB::select(DB::raw("SELECT count(twitter) as jml_twitter from berita 
-where kode_satker='$kode_satker' and twitter!='' AND tgl_input between '$dari' and '$sampai'"));
+where kode_satker='$kode_satker' and length(twitter)>10 AND tgl_input between '$dari' and '$sampai'"));
         $total_tiktok = DB::select(DB::raw("SELECT count(tiktok) as jml_tiktok from berita 
-where kode_satker='$kode_satker' and tiktok!='' AND tgl_input between '$dari' and '$sampai'"));
+where kode_satker='$kode_satker' and length(tiktok)>10 AND tgl_input between '$dari' and '$sampai'"));
         $total_sippn = DB::select(DB::raw("SELECT count(sippn) as jml_sippn from berita 
-where kode_satker='$kode_satker' and sippn!='' AND tgl_input between '$dari' and '$sampai'"));
+where kode_satker='$kode_satker' and length(sippn)>10 AND tgl_input between '$dari' and '$sampai'"));
         $total_youtube = DB::select(DB::raw("SELECT count(youtube) as jml_youtube from berita 
-where kode_satker='$kode_satker' and youtube!='' AND tgl_input between '$dari' and '$sampai'"));
+where kode_satker='$kode_satker' and length(youtube)>10 AND tgl_input between '$dari' and '$sampai'"));
 
-        //dd($total_website[0]->jml_website);
-        //dd($getberita);
         $satker = DB::table('satker')->where('kode_satker', $kode_satker)->first();
         $satker_name = $satker->name;
-        //dd($satker->name);
-        //dd($getberita);
-//        return $total_website->jml_website;
-//        die;
 
         if ($request->jenis_media == "sosial_media") {
             //return "sosmed"; die;
